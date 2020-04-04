@@ -5,6 +5,7 @@
 
 ## Steps to reproduce:
 
+Note: To maintain the ennvironments, I highly recommend using [conda](https://anaconda.org/).
 
 ```
 git clone https://github.com/aitikgupta/rbm_recommendation_binary.git
