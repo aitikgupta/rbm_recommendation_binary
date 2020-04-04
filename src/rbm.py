@@ -4,6 +4,8 @@ from preprocessing import preprocess_data
 from dataload import load_data
 from tqdm import tqdm
 
+if torch.cuda.is_available():
+    torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
 class RBM():
     def __init__(self, nv, nh):

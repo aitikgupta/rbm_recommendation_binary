@@ -4,6 +4,7 @@ import joblib
 from dataload import load_data
 from preprocessing import preprocess_data
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def predict_output(model, train_folds, liked, disliked, top_like=3, top_dislike=2, verbose=True):
     user_data = np.array([-1 for movie in range(train_folds[0].shape[1])])
@@ -14,9 +15,9 @@ def predict_output(model, train_folds, liked, disliked, top_like=3, top_dislike=
     outs = np.zeros(train_folds[0].shape[1])
     for fold in range(len(train_folds)):
         probabilities, outputs = model.predict(
-            train_folds[fold], torch.FloatTensor(user_data))
-        probabilities = np.array(probabilities).ravel()
-        outputs = np.array(outputs).ravel()
+            train_folds[fold], torch.FloatTensor(user_data).to(device))
+        probabilities = np.array(probabilities.cpu()).ravel()
+        outputs = np.array(outputs.cpu()).ravel()
         probs += probabilities
         outs += outputs
     probs /= float(len(train_folds))
@@ -36,6 +37,7 @@ def predict_output(model, train_folds, liked, disliked, top_like=3, top_dislike=
     like.sort(key=lambda x: x[1], reverse=1)
     dislike.sort(key=lambda x: x[1], reverse=1)
     if verbose:
+        print(f"\n[INFO] Predicting Top {top_like} Likes and Top {top_dislike} Dislikes:")
         print("\nYou'll LIKE these Movies with ID:")
         _ = [print(f"MovieID: {i[0]}, Confidence: {i[1]}")
              for i in like[: min(top_like, len(like))]]

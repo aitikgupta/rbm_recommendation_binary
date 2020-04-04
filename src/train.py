@@ -5,7 +5,7 @@ from rbm import RBM
 import joblib
 
 
-def train_model(train_folds, test_folds, nh=100, k_walk=20, epochs=50, batch_size=32, lr=0.01, verbose=True):
+def train_model(train_folds, test_folds, nh=1000, k_walk=100, epochs=10, batch_size=32, lr=0.1, verbose=True):
     nv = train_folds[0].shape[1]
     rbm = RBM(nv=nv, nh=nh)
     if verbose:
@@ -24,6 +24,7 @@ def train_model(train_folds, test_folds, nh=100, k_walk=20, epochs=50, batch_siz
         opt = str(input("[OPTION] Replace original rbm.pkl? ")).lower()
         if opt == "y" or opt == "yes":
             joblib.dump(rbm, "rbm.pkl")
+            print("[INFO] Model Saved at src/rbm.pkl!")
         print("[INFO] Training Complete!")
     plt.title(f"Loss vs Epochs")
     plt.legend()

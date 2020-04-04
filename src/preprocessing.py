@@ -3,6 +3,7 @@ import pandas as pd
 import torch
 from dataload import load_data
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def binarify(value):
     if value >= 3:
@@ -35,8 +36,8 @@ def preprocess(train_data, test_data):
 
     train_processed = convert(train_data, n_users, n_movies)
     test_processed = convert(test_data, n_users, n_movies)
-    train_processed = torch.FloatTensor(train_processed)
-    test_processed = torch.FloatTensor(test_processed)
+    train_processed = torch.FloatTensor(train_processed).to(device)
+    test_processed = torch.FloatTensor(test_processed).to(device)
     return train_processed, test_processed
 
 
